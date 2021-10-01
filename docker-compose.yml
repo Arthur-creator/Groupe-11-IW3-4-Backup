@@ -1,0 +1,48 @@
+version: '3'
+services:
+  db:
+    image: mysql:5.7
+    restart: always
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_DATABASE: mvcdocker2
+      MYSQL_USER: user
+      MYSQL_PASSWORD: passpass
+      MYSQL_RANDOM_ROOT_PASSWORD: '1'
+    volumes:
+      - ./db_config:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin
+    restart: always
+    ports:
+      - 8082:80
+    environment:
+      - PMA_ARBITRARY=1
+    depends_on:
+      - db
+
+  composer:
+    restart: 'no'
+    image: composer
+    command: install --ignore-platform-reqs
+    volumes:
+      - ./www:/app
+
+  apache:
+    image: php:5.6-apache
+    build:
+      context: website
+      dockerfile: DockerFile
+    restart: always
+    ports:
+      - 80:80
+    depends_on:
+      - db
+    volumes:
+      - ./www:/var/www/html/
+      - ./server/000-default.conf:/etc/apache2/sites-available/000-default.conf
+      - ./server/apache2.conf:/etc/apache2/apache2.conf
+      - ./database/migrations:/database/migrations
+      - ./server/php.ini:/usr/local/etc/php/php.ini
