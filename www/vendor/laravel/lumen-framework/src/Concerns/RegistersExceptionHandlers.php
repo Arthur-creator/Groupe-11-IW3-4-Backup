@@ -5,9 +5,9 @@ namespace Laravel\Lumen\Concerns;
 use Error;
 use ErrorException;
 use Symfony\Component\Console\Output\ConsoleOutput;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Debug\Exception\FatalErrorException;
 use Symfony\Component\Debug\Exception\FatalThrowableError;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 trait RegistersExceptionHandlers
@@ -15,9 +15,9 @@ trait RegistersExceptionHandlers
     /**
      * Throw an HttpException with the given data.
      *
-     * @param  int     $code
+     * @param  int  $code
      * @param  string  $message
-     * @param  array   $headers
+     * @param  array  $headers
      * @return void
      *
      * @throws \Symfony\Component\HttpKernel\Exception\HttpException

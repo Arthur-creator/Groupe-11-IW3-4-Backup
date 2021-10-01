@@ -16,7 +16,7 @@ use Illuminate\Http\JsonResponse;
 
 $router->get('/', ListingController::class);
 
-$app->get('/time', function () {
+$router->get('/time', function () {
     return new JsonResponse([
         'time' => time(),
     ]);

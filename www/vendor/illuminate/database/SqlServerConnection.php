@@ -3,12 +3,14 @@
 namespace Illuminate\Database;
 
 use Closure;
-use Exception;
-use Throwable;
 use Doctrine\DBAL\Driver\PDOSqlsrv\Driver as DoctrineDriver;
-use Illuminate\Database\Query\Processors\SqlServerProcessor;
+use Exception;
 use Illuminate\Database\Query\Grammars\SqlServerGrammar as QueryGrammar;
+use Illuminate\Database\Query\Processors\SqlServerProcessor;
 use Illuminate\Database\Schema\Grammars\SqlServerGrammar as SchemaGrammar;
+use Illuminate\Database\Schema\SqlServerBuilder;
+use LogicException;
+use Throwable;
 
 class SqlServerConnection extends Connection
 {
@@ -24,7 +26,7 @@ class SqlServerConnection extends Connection
     public function transaction(Closure $callback, $attempts = 1)
     {
         for ($a = 1; $a <= $attempts; $a++) {
-            if ($this->getDriverName() == 'sqlsrv') {
+            if ($this->getDriverName() === 'sqlsrv') {
                 return parent::transaction($callback);
             }
 
@@ -67,6 +69,20 @@ class SqlServerConnection extends Connection
     }
 
     /**
+     * Get a schema builder instance for the connection.
+     *
+     * @return \Illuminate\Database\Schema\SqlServerBuilder
+     */
+    public function getSchemaBuilder()
+    {
+        if (is_null($this->schemaGrammar)) {
+            $this->useDefaultSchemaGrammar();
+        }
+
+        return new SqlServerBuilder($this);
+    }
+
+    /**
      * Get the default schema grammar instance.
      *
      * @return \Illuminate\Database\Schema\Grammars\SqlServerGrammar
@@ -93,6 +109,12 @@ class SqlServerConnection extends Connection
      */
     protected function getDoctrineDriver()
     {
+        if (! class_exists(DoctrineDriver::class)) {
+            throw new LogicException(
+                'Laravel v6 is only compatible with doctrine/dbal 2, in order to use this feature you must require the package "doctrine/dbal:^2.6".'
+            );
+        }
+
         return new DoctrineDriver;
     }
 }

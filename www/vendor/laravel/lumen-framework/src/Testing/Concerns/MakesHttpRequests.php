@@ -2,8 +2,10 @@
 
 namespace Laravel\Lumen\Testing\Concerns;
 
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
+use Laravel\Lumen\Http\Request as LumenRequest;
 use PHPUnit\Framework\Assert as PHPUnit;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 
@@ -17,7 +19,7 @@ trait MakesHttpRequests
     protected $response;
 
     /**
-     * The current URL being viewed.
+     * The current URI being viewed.
      *
      * @var string
      */
@@ -134,6 +136,40 @@ trait MakesHttpRequests
     }
 
     /**
+     * Visit the given URI with a OPTIONS request.
+     *
+     * @param  string  $uri
+     * @param  array  $data
+     * @param  array  $headers
+     * @return $this
+     */
+    public function options($uri, array $data = [], array $headers = [])
+    {
+        $server = $this->transformHeadersToServerVars($headers);
+
+        $this->call('OPTIONS', $uri, $data, [], [], $server);
+
+        return $this;
+    }
+
+    /**
+     * Visit the given URI with a HEAD request.
+     *
+     * @param  string  $uri
+     * @param  array  $data
+     * @param  array  $headers
+     * @return $this
+     */
+    public function head($uri, array $data = [], array $headers = [])
+    {
+        $server = $this->transformHeadersToServerVars($headers);
+
+        $this->call('HEAD', $uri, $data, [], [], $server);
+
+        return $this;
+    }
+
+    /**
      * Send the given request through the application.
      *
      * This method allows you to fully customize the entire Request object.
@@ -180,11 +216,11 @@ trait MakesHttpRequests
      */
     public function seeJsonEquals(array $data)
     {
-        $actual = json_encode(array_sort_recursive(
+        $actual = json_encode(Arr::sortRecursive(
             json_decode($this->response->getContent(), true)
         ));
 
-        $data = json_encode(array_sort_recursive(
+        $data = json_encode(Arr::sortRecursive(
             json_decode(json_encode($data), true)
         ));
 
@@ -237,13 +273,13 @@ trait MakesHttpRequests
             return $this->seeJson();
         }
 
-        if (! $responseData) {
+        if (! is_array($responseData)) {
             $responseData = json_decode($this->response->getContent(), true);
         }
 
         foreach ($structure as $key => $value) {
             if (is_array($value) && $key === '*') {
-                PHPUnit::assertInternalType('array', $responseData);
+                PHPUnit::assertIsArray($responseData);
 
                 foreach ($responseData as $responseDataItem) {
                     $this->seeJsonStructure($structure['*'], $responseDataItem);
@@ -276,11 +312,11 @@ trait MakesHttpRequests
             return PHPUnit::fail('Invalid JSON was returned from the route. Perhaps an exception was thrown?');
         }
 
-        $actual = json_encode(array_sort_recursive(
+        $actual = json_encode(Arr::sortRecursive(
             (array) $actual
         ));
 
-        foreach (array_sort_recursive($data) as $key => $value) {
+        foreach (Arr::sortRecursive($data) as $key => $value) {
             $expected = $this->formatToExpectedJson($key, $value);
 
             PHPUnit::{$method}(
@@ -290,6 +326,17 @@ trait MakesHttpRequests
         }
 
         return $this;
+    }
+
+    /**
+     * Assert that the response doesn't contain the given JSON.
+     *
+     * @param  array  $data
+     * @return $this
+     */
+    protected function seeJsonDoesntContains(array $data)
+    {
+        return $this->seeJsonContains($data, true);
     }
 
     /**
@@ -319,10 +366,10 @@ trait MakesHttpRequests
      *
      * @param  string  $method
      * @param  string  $uri
-     * @param  array   $parameters
-     * @param  array   $cookies
-     * @param  array   $files
-     * @param  array   $server
+     * @param  array  $parameters
+     * @param  array  $cookies
+     * @param  array  $files
+     * @param  array  $server
      * @param  string  $content
      * @return \Illuminate\Http\Response
      */
@@ -335,8 +382,10 @@ trait MakesHttpRequests
             $cookies, $files, $server, $content
         );
 
+        $this->app['request'] = LumenRequest::createFromBase($symfonyRequest);
+
         return $this->response = $this->app->prepareResponse(
-            $this->app->handle(Request::createFromBase($symfonyRequest))
+            $this->app->handle($this->app['request'])
         );
     }
 
@@ -373,7 +422,7 @@ trait MakesHttpRequests
         foreach ($headers as $name => $value) {
             $name = strtr(strtoupper($name), '-', '_');
 
-            if (! starts_with($name, $prefix) && $name != 'CONTENT_TYPE') {
+            if (! Str::startsWith($name, $prefix) && $name != 'CONTENT_TYPE') {
                 $name = $prefix.$name;
             }
 
@@ -436,7 +485,7 @@ trait MakesHttpRequests
 
         if (! is_null($value)) {
             PHPUnit::assertEquals(
-                $headers->get($headerName), $value,
+                $value, $headers->get($headerName),
                 "Header [{$headerName}] was found, but value [{$headers->get($headerName)}] does not match [{$value}]."
             );
         }
