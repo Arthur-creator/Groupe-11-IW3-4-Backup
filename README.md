@@ -28,16 +28,18 @@ Then, you need to run the docker
 ```bash
 docker compose up --build
 ```
+## Backup
 
+You can find our backup of the project [here](https://github.com/Arthur-creator/Groupe-11-IW3-4-Backup).
 ## Credits
 
 We are actually 3 students work on this project :
 
--Kurunchi CHANDRASEKARAM ([])
+-[Kurunchi CHANDRASEKARAM](https://github.com/kchandra77) 
 
--Thushanth PATHMASEELAN
+-[Thushanth PATHMASEELAN](https://github.com/pthushanth)
 
--Arthur GRATTON
+-[Arthur GRATTON](https://github.com/Arthur-creator)
 
 We all use a lot of ressources specilally school ressources
 
@@ -49,24 +51,6 @@ Please make sure to update tests as appropriate.
 
 ## License
 
-MIT License
+[MIT License](https://choosealicense.com/licenses/mit/)
 
-Copyright (c) 2021 Group11IW3
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
