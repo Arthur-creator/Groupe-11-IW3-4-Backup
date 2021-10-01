@@ -2,4 +2,7 @@
 /.idea
 Homestead.json
 Homestead.yaml
-.env
+www/.env
+log/
+/db_config
+/database
