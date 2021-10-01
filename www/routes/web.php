@@ -1,5 +1,8 @@
 <?php
 
+use Illuminate\Http\JsonResponse;
+
+/** @var \Laravel\Lumen\Routing\Router $router */
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -11,4 +14,10 @@
 |
 */
 
-$app->get('/', ListingController::class);
+$router->get('/', ListingController::class);
+
+$app->get('/time', function () {
+    return new JsonResponse([
+        'time' => time(),
+    ]);
+});
