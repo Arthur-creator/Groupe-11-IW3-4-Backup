@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Http\JsonResponse;
+
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -12,3 +14,8 @@
 */
 
 $app->get('/', ListingController::class);
+$app->get('/time', function () {
+    return new JsonResponse([
+        'time' => time(),
+    ]);
+});
