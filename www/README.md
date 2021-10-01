@@ -20,6 +20,17 @@ git branch -M main
 git push -uf origin main
 ```
 
+## When you have your local files
+
+```
+If you are using ubuntu, you can use MakeFile shortcuts :
+ - make run
+ - make migrate
+ - make update
+
+If you do't use ubuntu, you need to make the right commands which are provided in MakeFile 
+```
+
 ## Integrate with your tools
 
 - [ ] [Set up project integrations](https://gitlab.com/-/experiment/new_project_readme_content:4a397cb48d38676619135e8b4de25f05?https://docs.gitlab.com/ee/user/project/integrations/)
